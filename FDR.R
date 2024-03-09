@@ -29,5 +29,25 @@ for (subfolder in subfolders) {
       if (nrow(filtered_data) > 0) {
         write_xlsx(filtered_data, save_path)}
     }
-}}
+  }}
+
+###already gathered###
+folder_path<-"/Users/sunyuqi/Desktop/生命科学竞赛/原始数据/step2+3/step2/Gathered"
+file_list <- list.files(folder_path,pattern = "*.xlsx", full.names = TRUE) 
+library(dplyr)
+library(readxl)
+library(writexl)
+library(dplyr)
+for (file in file_list){
+  data <- read_xlsx(file) 
+  if (nrow(data) > 0) {
+    file_name<-basename(file)
+    
+    data<-data %>% arrange(pval)
+    data$FDR<-(nrow(data)/seq_len(nrow(data)))*data$pval
+    filtered_data<-data %>% filter(FDR<=0.05)
+    save_path<-file.path("/Users/sunyuqi/Desktop/生命科学竞赛/原始数据/step2+3/step2/FDR",paste0(file_name))
+    if (nrow(filtered_data) > 0) {
+      write_xlsx(filtered_data, save_path)}
+  }}
 
